@@ -5,7 +5,8 @@ const ExcelJS = require('exceljs');
 //Variables de configuración para generar QR
 var base = 'https://acollazos.qrc.es/api/short?key=';
 var key = '84e8bac4421fa0da3039a2749d8117e7';
-var string = '&url=';
+var string = '&folder=masive';
+var url = '&url='
 var typeqr =  '&static=1';
 var title = '&title=';
 var vanity = '&vanityurl='
@@ -29,9 +30,10 @@ var placas = []
 
 function generateQR(text) {
     console.log('descargando...')
-    axios.get(base+key+string+text+typeqr+title+text+vanity+text, optionAxios)
+    var urlfinal = base+key+url+text+typeqr+title+text+string+vanity+text
+    axios.get(urlfinal, optionAxios)
     .then(function(response) {
-        console.log('QR procesado: ', text)
+        console.log('QR procesado: ', text,  'url: ', urlfinal )
     })
     .catch(function(error){
         console.log(error);
