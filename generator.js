@@ -5,7 +5,9 @@ const ExcelJS = require('exceljs');
 //Variables de configuración para generar QR
 var base = 'https://acollazos.qrc.es/api/short?key=';
 var key = '84e8bac4421fa0da3039a2749d8117e7';
-var string = '&folder=masive';
+var folder = 'expresocol'
+var file = folder+'.xlsx'
+var string = '&folder='+ folder;
 var url = '&url='
 var typeqr =  '&static=1';
 var title = '&title=';
@@ -29,11 +31,11 @@ var padding = '/3'
 var placas = []
 
 function generateQR(text) {
-    console.log('descargando...')
     var urlfinal = base+key+url+text+typeqr+title+text+string+vanity+text
     axios.get(urlfinal, optionAxios)
     .then(function(response) {
         console.log('QR procesado: ', text,  'url: ', urlfinal )
+        downloadQR(text)
     })
     .catch(function(error){
         console.log(error);
@@ -43,21 +45,20 @@ function generateQR(text) {
 };
 
 function downloadQR(text) {
-    console.log('consultando...')
+    console.log('Descargando ',text, '...')
     var url = based + format + text + size + correction + padding
     open(url)
 }
 
-function readplacas() {
+async function readplacas() {
     var workbook = new ExcelJS.Workbook();
-    workbook.xlsx.readFile('placas.xlsx').then(function() {
+    workbook.xlsx.readFile(file).then(function() {
         var lon=workbook.getWorksheet(1).actualRowCount
         for (var i=1; i<= lon;i++){
-            placas[i-1] = workbook.getWorksheet(1).getRow(i).getCell(1).value
+            placas[i-1] = workbook.getWorksheet(1).getRow(i).getCell(1).value;
             generateQR(placas[i-1]);
-            downloadQR(placas[i-1]);
         }
-        console.log('read placas: ', placas)
+        
     })
     .catch(function(error){
         console.log(error)
